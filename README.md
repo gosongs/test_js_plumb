@@ -16,5 +16,5 @@ npm install
   # open browser: http://127.0.0.1:8080
   ```
 + jsPlumb 本身不依赖于jquery、bootstrap、font-awesome, 只作为演示需要;
-+ 此项目使用到的 jsPlumb 库强行移除了版权检测的代码, 挺有意思的加密方法, 写了一篇文章分析一下: ;
++ 此项目使用到的 jsPlumb 库强行移除了版权检测的代码, 挺有意思的加密方法, 并写了一篇文章分析一下: [破解 jsPlumb toolkit版](https://gosongs.github.io/2017/06/20/hack-js-plumb/);
 + **[鼓励大家使用正版, 尊重知识产权](https://jsplumbtoolkit.com/purchase)**;
