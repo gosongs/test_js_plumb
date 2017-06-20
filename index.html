@@ -1,0 +1,152 @@
+<!doctype html>
+<html>
+
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <meta name="viewport" content="width=device-width">
+  <script src="js/jquery.min.js"></script>
+  <link rel="stylesheet" href="node_modules/font-awesome/css/font-awesome.css">
+  <link rel="stylesheet" href="css/main.css">
+  <link rel="stylesheet" href="css/jsplumbtoolkit-defaults.css">
+  <link rel="stylesheet" href="css/jsplumbtoolkit-demo.css">
+  <link rel="stylesheet" href="css/app.css">
+  <title>Test jsPlumb</title>
+</head>
+
+<body class="jtk-bootstrap jtk-bootstrap-wide">
+  <div class="jtk-page-container">
+    <div class="jtk-container">
+      <!-- content -->
+
+      <!-- edit text (question or action or output or edge label) -->
+      <script type="jtk" class="dlg" id="dlgText" title="Enter Text">
+        <input type="text" size="50" jtk-focus jtk-att="text" value="${text}" jtk-commit="true" />
+      </script>
+
+      <script type="jtk" class="dlg" id="dlgConfirm" title="Please Confirm">
+        ${msg}?
+      </script>
+
+      <script type="jtk" class="dlg" id="dlgMessage" title="Message" cancel="false">
+        ${msg}
+      </script>
+
+      <div class="jtk-demo-main" id="jtk-demo-flowchart" ng-controller="DemoController as DemoController" ng-app="app">
+
+        <!-- the node palette -->
+        <div class="sidebar node-palette" jsplumb-palette selector="li" surface-id="flowchartSurface" type-extractor="DemoController.typeExtractor"
+          on-drop="DemoController.onDrop">
+          <ul ng-repeat="node in nodeTypes">
+            <li jtk-node-type="{{ node.type }}" title="Drag to add new">
+              {{node.label}}
+            </li>
+          </ul>
+        </div>
+
+        <script type="text/ng-template" id="start_template.tpl">
+          <div ng-attr-style="width:{{node.w}}px;height:{{node.h}}px;">
+            <div style="position:relative">
+              <svg ng-attr-width="{{ node.w }}" ng-attr-height="{{ node.h }}">
+                <ellipse ng-attr-cx="{{ node.w/2 }}" ng-attr-cy="{{ node.h/2 }}" ng-attr-rx="{{ node.w/2 }}" ng-attr-ry="{{ node.h/2 }}"
+                  class="outer" />
+                <ellipse ng-attr-cx="{{ node.w/2 }}" ng-attr-cy="{{ node.h/2 }}" ng-attr-rx="{{ (node.w/2) - 10 }}" ng-attr-ry="{{ (node.h/2) - 10 }}"
+                  class="inner" />
+                <text text-anchor="middle" ng-attr-x="{{ node.w / 2 }}" ng-attr-y="{{ node.h / 2 }}" dominant-baseline="central">{{node.text}}</text>
+              </svg>
+            </div>
+          </div>
+          <jtk-source port-type="start" filter=".outer" filter-negate="true"></jtk-source>
+        </script>
+
+        <script type="text/ng-template" id="question_template.tpl">
+          <div ng-attr-style="width:{{node.w}}px;height:{{node.h}}px;">
+            <div class="node-edit node-action" ng-click="editNode(node)">
+              <i class="fa fa-pencil-square-o"></i>
+            </div>
+            <div class="node-delete node-action" ng-click="removeNode(node)">
+              <i class="fa fa-times"></i>
+            </div>
+            <svg ng-attr-width="{{node.w}}" ng-attr-height="{{node.h}}">
+              <path ng-attr-d="M {{node.w/2}} 0 L {{node.w}} {{node.h/2}} L {{node.w/2}} {{node.h}} L 0 {{node.h/2}} Z" class="outer" />
+              <path ng-attr-d="M {{node.w/2}} 10 L {{node.w-10}} {{node.h/2}} L {{node.w/2}} {{node.h-10}} L 10 {{node.h/2}} Z" class="inner"
+              />
+              <text text-anchor="middle" ng-attr-x="{{node.w/2}}" ng-attr-y="{{node.h/2}}" dominant-baseline="central">{{node.text}}</text>
+            </svg>
+          </div>
+          <jtk-source port-type="source" filter=".outer"></jtk-source>
+          <jtk-target port-type="target"></jtk-target>
+        </script>
+
+        <script type="text/ng-template" id="action_template.tpl">
+          <div ng-attr-style="width:{{node.w}}px;height:{{node.h}}px;">
+            <div style="position:relative">
+              <div class="node-edit node-action" ng-click="editNode(node)">
+                <i class="fa fa-pencil-square-o"></i>
+              </div>
+              <div class="node-delete node-action" ng-click="removeNode(node)">
+                <i class="fa fa-times"></i>
+              </div>
+              <svg ng-attr-width="{{node.w}}" ng-attr-height="{{node.h}}">
+                <rect x="0" y="0" ng-attr-width="{{node.w}}" ng-attr-height="{{node.h}}" class="outer" />
+                <rect x="10" y="10" ng-attr-width="{{node.w-20}}" ng-attr-height="{{node.h-20}}" class="inner" />
+                <text text-anchor="middle" ng-attr-x="{{node.w/2}}" ng-attr-y="{{node.h/2}}" dominant-baseline="central">{{node.text}}</text>
+              </svg>
+            </div>
+            <jtk-target port-type="target"></jtk-target>
+            <jtk-source port-type="source" filter=".outer"></jtk-source>
+          </div>
+        </script>
+
+        <script type="text/ng-template" id="output_template.tpl">
+          <div ng-attr-style="width:{{node.w}}px;height:{{node.h}}px;">
+            <div style="position:relative">
+              <div class="node-edit node-action" ng-click="editNode(node)">
+                <i class="fa fa-pencil-square-o"></i>
+              </div>
+              <div class="node-delete node-action" ng-click="removeNode(node)">
+                <i class="fa fa-times"></i>
+              </div>
+              <svg ng-attr-width="{{node.w}}" ng-attr-height="{{node.h}}">
+                <rect x="0" y="0" ng-attr-width="{{node.w}}" ng-attr-height="{{node.h}}" />
+                <text text-anchor="middle" ng-attr-x="{{node.w/2}}" ng-attr-y="{{node.h/2}}" dominant-baseline="central">{{node.text}}</text>
+              </svg>
+            </div>
+          </div>
+          <jtk-target port-type="target"></jtk-target>
+        </script>
+
+        <!-- this is the main drawing area -->
+        <div class="jtk-demo-canvas">
+
+          <jsplumb-toolkit params="DemoController.toolkitParams" init="DemoController.init" render-params="DemoController.renderParams"
+            jtk-id="flowchartToolkit" surface-id="flowchartSurface" style="width:100%;height:100%;position:relative;margin:0">
+
+            <!-- controls -->
+            <div class="controls">
+              <i class="fa fa-arrows selected-mode" mode="pan" title="Pan Mode"></i>
+              <i class="fa fa-pencil" mode="select" title="Select Mode"></i>
+              <i class="fa fa-home" reset title="Zoom To Fit"></i>
+            </div>
+
+            <!-- miniview -->
+            <jsplumb-miniview surface-id="flowchartSurface" class="miniview"></jsplumb-miniview>
+          </jsplumb-toolkit>
+
+        </div>
+
+        <!-- the current dataset -->
+        <div class="jtk-demo-dataset"></div>
+      </div>
+
+      <script src="js/angular.js"></script>
+      <script src="js/jsplumbtoolkit.js"></script>
+      <script src="js/syntax-highlighter.js"></script>
+      <script src="js/jsplumbtoolkit-angular-1.x.js"></script>
+      <script src="app.js"></script>
+      <!-- /content -->
+    </div>
+  </div>
+</body>
+
+</html>
