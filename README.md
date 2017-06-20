@@ -1,4 +1,4 @@
-此demo来源于官网中 [Flowchart Angular1.x Version](https://jsplumbtoolkit.com/demos/toolkit/angular-1.x/index.html), [jsPlumb](https://jsplumbtoolkit.com/) 提供了社区版(免费)和 toolkit 版(收费版).
+此demo来源于官网中 [AngularJS1.x 版流程图](https://jsplumbtoolkit.com/demos/toolkit/angular-1.x/index.html), [jsPlumb](https://jsplumbtoolkit.com/) 提供了社区版(免费)和 toolkit 版(收费版).
 
 ## Install
 ```shell
